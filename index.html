@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOWKEY | Stealth Luxury</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --accent: #ffffff;
+            --text-gray: #888;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--accent);
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Hide default cursor for custom one */
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            mix-blend-mode: difference;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-container {
+            width: 300px;
+            transition: transform 0.1s ease-out;
+        }
+
+        .logo-container img {
+            width: 100%;
+            filter: invert(1); /* Makes black logo white for dark mode */
+        }
+
+        h1 {
+            font-size: 1rem;
+            letter-spacing: 15px;
+            margin-top: 2rem;
+            color: var(--text-gray);
+        }
+
+        /* Product Grid Section */
+        .products {
+            padding: 5rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: #111;
+            padding: 1rem;
+            border: 1px solid #222;
+            transition: 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            border-color: #555;
+            transform: translateY(-10px);
+        }
+
+        .product-img-placeholder {
+            width: 100%;
+            height: 400px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+
+    <nav>
+        <div class="brand">LOWKEY</div>
+        <div class="nav-links">
+            <a href="#">COLLECTIONS</a>
+            <a href="#">THE TECH</a>
+            <a href="#">CART (0)</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="logo-container" id="logo">
+            <img src="Lowkey.jpg" alt="Lowkey Logo">
+        </div>
+        <h1>LOWKEY</h1>
+    </section>
+
+    <section class="products">
+        <div class="product-card">
+            <div class="product-img-placeholder">COMMUTER PANT</div>
+            <p>001 / STEALTH SERIES</p>
+        </div>
+        <div class="product-card">
+            <div class="product-img-placeholder">TRANSITION SHELL</div>
+            <p>002 / WEATHERPROOF</p>
+        </div>
+        <div class="product-card">
+            <div class="product-img-placeholder">MERINO TEE</div>
+            <p>003 / PERFORMANCE</p>
+        </div>
+    </section>
+
+    <script>
+        const cursor = document.querySelector('#cursor');
+        const logo = document.querySelector('#logo');
+
+        // Move custom cursor
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX - 10,
+                y: e.clientY - 10,
+                duration: 0.1
+            });
+
+            // Parallax Effect for Logo
+            const xAxis = (window.innerWidth / 2 - e.clientX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+            logo.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Hover effect for links
+        document.querySelectorAll('a, .product-card').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                gsap.to(cursor, { scale: 4, opacity: 0.3 });
+            });
+            link.addEventListener('mouseleave', () => {
+                gsap.to(cursor, { scale: 1, opacity: 1 });
+            });
+        });
+    </script>
+</body>
+</html>
