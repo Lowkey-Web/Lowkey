@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EatBrisbane — Discover Brisbane's Food Scene</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --fire: #E8440A;
+      --ember: #FF6B35;
+      --gold: #F5A623;
+      --cream: #FDF6ED;
+      --charcoal: #1A1614;
+      --dark: #231E1B;
+      --mid: #5C4A3A;
+      --soft: #C4A882;
+      --card-bg: #FFFFFF;
+      --border: #EDE0D0;
+      --shadow: 0 4px 24px rgba(26,22,20,0.10);
+      --shadow-lg: 0 12px 48px rgba(26,22,20,0.18);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(26,22,20,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--cream);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--ember); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(253,246,237,0.7);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ember); }
+    .nav-cta {
+      background: var(--ember);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--fire); transform: translateY(-1px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      background: var(--charcoal);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 2rem 2rem;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(232,68,10,0.18) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 80%, rgba(245,166,35,0.10) 0%, transparent 60%);
+    }
+    .hero-grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 1.2rem;
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1.0;
+      text-align: center;
+      max-width: 900px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--ember);
+    }
+    .hero-sub {
+      margin-top: 1.5rem;
+      color: rgba(253,246,237,0.55);
+      font-size: 1.1rem;
+      text-align: center;
+      max-width: 520px;
+      line-height: 1.7;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    /* ─── SEARCH BAR ─── */
+    .search-bar-wrap {
+      margin-top: 2.5rem;
+      width: 100%;
+      max-width: 640px;
+      animation: fadeUp 0.8s 0.3s ease both;
+      position: relative;
+      z-index: 2;
+    }
+    .search-row {
+      display: flex;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    }
+    .search-row input {
+      flex: 1;
+      border: none;
+      padding: 1.1rem 1.4rem;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--charcoal);
+      outline: none;
+      background: transparent;
+    }
+    .search-row input::placeholder { color: #AAA; }
+    .search-btn {
+      background: var(--fire);
+      color: white;
+      border: none;
+      padding: 0 1.6rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .search-btn:hover { background: #C9370A; }
+
+    /* ─── CHIPS / CATEGORIES ─── */
+    .chips-row {
+      display: flex; gap: 0.6rem; flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1.2rem;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(253,246,237,0.8);
+      padding: 0.45rem 1rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .chip:hover, .chip.active {
+      background: var(--ember);
+      border-color: var(--ember);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    /* ─── SECTION HEADERS ─── */
+    .section { padding: 5rem 2rem; max-width: 1300px; margin: 0 auto; }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--charcoal);
+      line-height: 1.15;
+    }
+    .section-title em { font-style: italic; color: var(--ember); }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .see-all {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ember);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+    .see-all:hover { text-decoration: underline; }
+
+    /* ─── MAP SECTION ─── */
+    #map-section {
+      background: var(--dark);
+      padding: 0;
+    }
+    .map-container-wrap {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    #map {
+      width: 100%;
+      height: 560px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .map-loading {
+      width: 100%;
+      height: 560px;
+      border-radius: 20px;
+      background: #2A2420;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(253,246,237,0.4);
+      font-size: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .map-spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(232,68,10,0.2);
+      border-top-color: var(--ember);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── RESTAURANT CARDS ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      animation: fadeUp 0.5s ease both;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .card-img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, #E8C9A0, #C4906A);
+    }
+    .card-img-placeholder {
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(135deg, #E8C9A0 0%, #C4906A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+    .card-body { padding: 1.2rem 1.3rem 1.4rem; }
+    .card-tag {
+      display: inline-block;
+      background: #FFF0E8;
+      color: var(--fire);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      margin-bottom: 0.6rem;
+    }
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+    }
+    .card-addr {
+      font-size: 0.8rem;
+      color: var(--soft);
+      margin-bottom: 0.7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    .stars { color: var(--gold); font-size: 0.85rem; }
+    .rating-count { color: var(--soft); font-weight: 400; font-size: 0.78rem; }
+    .open-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 100px;
+    }
+    .open-badge.open { background: #E8F7EE; color: #1A7A45; }
+    .open-badge.closed { background: #FEE8E8; color: #C0392B; }
+    .open-badge.unknown { background: #F0F0F0; color: #777; }
+
+    /* ─── CURATED SECTIONS ─── */
+    .curated-strip {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .curated-strip::-webkit-scrollbar { height: 4px; }
+    .curated-strip::-webkit-scrollbar-thumb { background: var(--soft); border-radius: 2px; }
+    .curated-card {
+      min-width: 260px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      aspect-ratio: 3/4;
+      transition: transform 0.25s;
+    }
+    .curated-card:hover { transform: scale(1.02); }
+    .curated-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .curated-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,22,20,0.85) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.3rem;
+    }
+    .curated-card-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 0.3rem;
+    }
+    .curated-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1.3;
+    }
+    .curated-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    /* ─── CATEGORY GRID ─── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    .cat-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-item:hover {
+      border-color: var(--ember);
+      background: #FFF5EF;
+      transform: translateY(-3px);
+    }
+    .cat-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .cat-name { font-size: 0.875rem; font-weight: 600; color: var(--charcoal); }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(26,22,20,0.75);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes modalIn { from { opacity:0; transform: scale(0.92) translateY(20px); } to { opacity:1; transform: none; } }
+    .modal-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+    .modal-img-placeholder {
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(135deg, #E8C9A0, #C4906A);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .modal-body { padding: 2rem; }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: white;
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .modal-close:hover { background: #F5F5F5; }
+    .modal-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .modal-addr { color: var(--soft); font-size: 0.9rem; margin-bottom: 1.2rem; }
+    .modal-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .modal-chip {
+      display: flex; align-items: center; gap: 0.4rem;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .modal-hours { font-size: 0.85rem; color: var(--mid); line-height: 1.8; }
+    .modal-hours strong { color: var(--charcoal); }
+    #modal-map { width: 100%; height: 200px; border-radius: 12px; margin-top: 1.5rem; }
+
+    /* ─── MODAL ACTION BUTTONS ─── */
+    .modal-actions {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      margin: 1.4rem 0 0.5rem;
+    }
+    .modal-action-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s;
+    }
+    .modal-action-btn.primary {
+      background: var(--fire);
+      color: white;
+    }
+    .modal-action-btn.primary:hover { background: #C9370A; transform: translateY(-1px); }
+    .modal-action-btn.secondary {
+      background: var(--cream);
+      color: var(--charcoal);
+      border: 1.5px solid var(--border);
+    }
+    .modal-action-btn.secondary:hover { background: #F5EDE0; border-color: var(--soft); transform: translateY(-1px); }
+    .modal-action-btn.green {
+      background: #E8F7EE;
+      color: #1A7A45;
+      border: 1.5px solid #B8E6CC;
+    }
+    .modal-action-btn.green:hover { background: #D0F0E0; transform: translateY(-1px); }
+    .modal-divider {
+      height: 1px; background: var(--border); margin: 1.2rem 0;
+    }
+    .modal-section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 0.6rem;
+    }
+    .modal-reviews {
+      display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.5rem;
+    }
+    .modal-review {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      font-size: 0.83rem;
+      color: var(--mid);
+      line-height: 1.6;
+      border: 1px solid var(--border);
+    }
+    .modal-review-author {
+      font-weight: 600; color: var(--charcoal);
+      margin-bottom: 0.25rem;
+      font-size: 0.8rem;
+    }
+    .modal-review-stars { color: var(--gold); margin-bottom: 0.2rem; font-size: 0.8rem; }
+    .modal-price-tag {
+      display: inline-block;
+      background: #F0F7FF;
+      color: #1A5FA8;
+      border: 1px solid #C0D8F0;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--charcoal);
+      color: rgba(253,246,237,0.4);
+      text-align: center;
+      padding: 2.5rem 1rem;
+      font-size: 0.82rem;
+    }
+    footer strong { color: var(--ember); }
+
+    /* ─── LOADING SKELETON ─── */
+    .skeleton {
+      background: linear-gradient(90deg, #F0E8DE 25%, #E8DDD0 50%, #F0E8DE 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .skeleton-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .skeleton-img { height: 190px; }
+    .skeleton-body { padding: 1.2rem; }
+    .skeleton-line { height: 14px; margin-bottom: 10px; }
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.med { width: 80%; }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--charcoal);
+      color: white;
+      padding: 0.85rem 1.5rem;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      z-index: 300;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .section { padding: 3.5rem 1rem; }
+      .cards-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── DARK MAP SECTION LABEL ─── */
+    #map-section .section-title { color: var(--cream); }
+    #map-section .section-label { color: var(--gold); }
+    #map-section .see-all { color: var(--ember); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Eat<span>Brisbane</span></div>
+  <ul class="nav-links">
+    <li><a href="#nearby">Nearby</a></li>
+    <li><a href="#map-section">Map</a></li>
+    <li><a href="#hidden-gems">Hidden Gems</a></li>
+    <li><a href="#trending">Trending</a></li>
+    <li><a href="#budget">Budget Eats</a></li>
+  </ul>
+  <button class="nav-cta" onclick="getUserLocation()">📍 Near Me</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-eyebrow">Brisbane's Food Destination</div>
+  <h1 class="hero-title">Find your next <em>favourite</em> meal in Brisbane</h1>
+  <p class="hero-sub">Explore cafés, hidden gems, late-night eats, and everything in between — all in one place.</p>
+  <div class="search-bar-wrap">
+    <div class="search-row">
+      <input type="text" id="main-search" placeholder="Search restaurants, cafés, cuisines…" autocomplete="off"/>
+      <button class="search-btn" onclick="doSearch()">Search</button>
+    </div>
+  </div>
+  <div class="chips-row" id="category-chips">
+    <span class="chip active" onclick="filterCategory(this,'restaurant')">🍽️ All</span>
+    <span class="chip" onclick="filterCategory(this,'cafe')">☕ Cafés</span>
+    <span class="chip" onclick="filterCategory(this,'burger')">🍔 Burgers</span>
+    <span class="chip" onclick="filterCategory(this,'dessert')">🍦 Desserts</span>
+    <span class="chip" onclick="filterCategory(this,'pizza')">🍕 Pizza</span>
+    <span class="chip" onclick="filterCategory(this,'asian')">🥢 Asian</span>
+    <span class="chip" onclick="filterCategory(this,'bar')">🍺 Bars</span>
+    <span class="chip" onclick="filterCategory(this,'fast_food')">🌮 Fast Food</span>
+  </div>
+</section>
+
+<!-- NEARBY RESTAURANTS -->
+<section class="section" id="nearby">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Around You</div>
+      <h2 class="section-title">Restaurants <em>Nearby</em></h2>
+    </div>
+    <span class="see-all" onclick="loadMoreNearby()">Load more →</span>
+  </div>
+  <div class="cards-grid" id="nearby-grid">
+    <!-- Skeleton placeholders -->
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+  </div>
+</section>
+
+<!-- MAP SECTION -->
+<section id="map-section">
+  <div class="map-container-wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Explore</div>
+        <h2 class="section-title">Interactive <em>Map</em></h2>
+      </div>
+      <span class="see-all" onclick="recenterMap()">Recenter →</span>
+    </div>
+    <div id="map">
+      <div class="map-loading" id="map-loading">
+        <div class="map-spinner"></div>
+        <span>Loading map…</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Browse by</div>
+      <h2 class="section-title">Food <em>Categories</em></h2>
+    </div>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-item" onclick="searchCategory('cafe Brisbane')"><div class="cat-icon">☕</div><div class="cat-name">Cafés</div></div>
+    <div class="cat-item" onclick="searchCategory('burger Brisbane')"><div class="cat-icon">🍔</div><div class="cat-name">Burgers</div></div>
+    <div class="cat-item" onclick="searchCategory('pizza Brisbane')"><div class="cat-icon">🍕</div><div class="cat-name">Pizza</div></div>
+    <div class="cat-item" onclick="searchCategory('sushi Brisbane')"><div class="cat-icon">🍣</div><div class="cat-name">Sushi</div></div>
+    <div class="cat-item" onclick="searchCategory('dessert Brisbane')"><div class="cat-icon">🍦</div><div class="cat-name">Desserts</div></div>
+    <div class="cat-item" onclick="searchCategory('ramen Brisbane')"><div class="cat-icon">🍜</div><div class="cat-name">Ramen</div></div>
+    <div class="cat-item" onclick="searchCategory('brunch Brisbane')"><div class="cat-icon">🥞</div><div class="cat-name">Brunch</div></div>
+    <div class="cat-item" onclick="searchCategory('kebab Brisbane')"><div class="cat-icon">🌮</div><div class="cat-name">Kebabs</div></div>
+    <div class="cat-item" onclick="searchCategory('indian Brisbane')"><div class="cat-icon">🍛</div><div class="cat-name">Indian</div></div>
+    <div class="cat-item" onclick="searchCategory('thai Brisbane')"><div class="cat-icon">🌶️</div><div class="cat-name">Thai</div></div>
+    <div class="cat-item" onclick="searchCategory('bar pub Brisbane')"><div class="cat-icon">🍺</div><div class="cat-name">Bars</div></div>
+    <div class="cat-item" onclick="searchCategory('late night food Brisbane')"><div class="cat-icon">🌙</div><div class="cat-name">Late Night</div></div>
+  </div>
+</section>
+
+<!-- HIDDEN GEMS -->
+<section class="section" id="hidden-gems">
+  <div class="section-header">
+    <div>
+      <div class="section-label">✨ Curated</div>
+      <h2 class="section-title">Hidden <em>Gems</em></h2>
+    </div>
+    <span class="see-all" onclick="loadCurated('gems')">See all →</span>
+  </div>
+  <div class="curated-strip" id="gems-strip">
+    <!-- loaded via JS -->
+  </div>
+</section>
+
+<!-- TRENDING -->
+<section class="section" id="trending" style="background: #FFF8F4; margin: 0; max-width: 100%; padding: 5rem 0;">
+  <div style="max-width:1300px; margin:0 auto; padding: 0 2rem;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">🔥 Hot Right Now</div>
+        <h2 class="section-title">Trending Food <em>Spots</em></h2>
+      </div>
+      <span class="see-all" onclick="loadCurated('trending')">See all →</span>
+    </div>
+    <div class="cards-grid" id="trending-grid">
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUDGET EATS -->
+<section class="section" id="budget">
+  <div class="section-header">
+    <div>
+      <div class="section-label">💸 Student Picks</div>
+      <h2 class="section-title">Budget <em>Eats</em></h2>
+    </div>
+    <span class="see-all" onclick="loadCurated('budget')">See all →</span>
+  </div>
+  <div class="cards-grid" id="budget-grid">
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--cream); margin-bottom:0.5rem;">Eat<strong>Brisbane</strong></p>
+  <p>Discovering Brisbane's best food spots, powered by Google Places API.</p>
+  <p style="margin-top:0.4rem;">© 2025 EatBrisbane. Data provided by Google Maps.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div id="modal-img-wrap"></div>
+    <div class="modal-body">
+      <h2 class="modal-name" id="modal-name"></h2>
+      <p class="modal-addr" id="modal-addr"></p>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+      <div id="modal-hours"></div>
+      <div id="modal-map"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const BRISBANE = { lat: -27.4698, lng: 153.0251 };
+  let map, service, markers = [], infoWindows = [], nextPageToken = null;
+  let currentType = 'restaurant';
+  let idleDebounce = null;
+  let mapInitialized = false;
+
+  // ─── INIT MAP ───
+  function initMap() {
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+    
+    document.getElementById('map-loading').style.display = 'none';
+
+    map = new google.maps.Map(mapEl, {
+      center: BRISBANE,
+      zoom: 14,
+      styles: mapStyles(),
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true,
+    });
+
+    service = new google.maps.places.PlacesService(map);
+
+    // Setup Modal Close
+    const modalBox = document.getElementById('modal-box');
+    if (modalBox && !document.querySelector('.modal-close')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'modal-close';
+        closeBtn.innerHTML = '✕';
+        closeBtn.onclick = () => {
+          document.getElementById('modal-overlay').classList.remove('open');
+          document.body.style.overflow = '';
+        };
+        modalBox.style.position = 'relative';
+        modalBox.prepend(closeBtn);
+    }
+
+    // Load markers whenever map moves or zooms
+    map.addListener('idle', () => {
+      clearTimeout(idleDebounce);
+      idleDebounce = setTimeout(() => {
+        const center = map.getCenter();
+        if (center) {
+          addMarkersForLocation({ lat: center.lat(), lng: center.lng() }, currentType);
+        }
+      }, 600);
+    });
+
+    // Initial load
+    loadNearby(BRISBANE, 'restaurant');
+    mapInitialized = true;
+
+    loadCurated('gems');
+    loadCurated('trending');
+    loadCurated('budget');
+  }
+
+  // ─── LOAD NEARBY ───
+  function loadNearby(location, type) {
+    if (!service) return;
+    const latLng = new google.maps.LatLng(location.lat, location.lng);
+    const request = {
+      location: latLng,
+      radius: 2000,
+      type: 'restaurant',
+      keyword: type !== 'restaurant' ? type : undefined,
+    };
+    service.nearbySearch(request, (results, status, pagination) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        nextPageToken = (pagination && pagination.hasNextPage) ? pagination : null;
+        renderCards(results, 'nearby-grid');
+        addMapMarkers(results);
+      } else {
+        const grid = document.getElementById('nearby-grid');
+        if (grid) grid.innerHTML = '<p style="color:var(--soft);grid-column:1/-1;text-align:center;padding:2rem;">No results found. Try a different area.</p>';
+      }
+    });
+  }
+
+  function addMarkersForLocation(location, type) {
+    if (!service) return;
+    const request = {
+      location: new google.maps.LatLng(location.lat, location.lng),
+      radius: 2000,
+      type: 'restaurant',
+      keyword: type !== 'restaurant' ? type : undefined,
+    };
+    service.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        addMapMarkers(results);
+      }
+    });
+  }
+
+  function loadMoreNearby() {
+    if (nextPageToken && nextPageToken.hasNextPage) {
+      nextPageToken.nextPage();
+    } else {
+      showToast('No more results to load');
+    }
+  }
+
+  // ─── SEARCH ───
+  function doSearch() {
+    const q = document.getElementById('main-search').value.trim();
+    if (!q || !service) return;
+    const request = { query: q + ' Brisbane food' };
+    service.textSearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        renderCards(results, 'nearby-grid');
+        addMapMarkers(results);
+        if (results[0] && results[0].geometry) {
+          map.panTo(results[0].geometry.location);
+          map.setZoom(14);
+        }
+        document.getElementById('nearby').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        showToast('No results found.');
+      }
+    });
+  }
+
+  // Event Listeners
+  document.getElementById('main-search').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  function searchCategory(q) {
+    document.getElementById('main-search').value = q;
+    doSearch();
+  }
+
+  function filterCategory(el, type) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    currentType = type;
+    let loc = BRISBANE;
+    if (map) {
+      const c = map.getCenter();
+      if (c) loc = { lat: c.lat(), lng: c.lng() };
+    }
+    loadNearby(loc, type);
+    document.getElementById('nearby').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ─── RENDER HELPERS ───
+  function renderCards(places, gridId) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    grid.innerHTML = '';
+    if (!places || places.length === 0) {
+      grid.innerHTML = '<p style="color:var(--soft);grid-column:1/-1;text-align:center;padding:2rem;">No results found.</p>';
+      return;
+    }
+    places.forEach((place, i) => grid.appendChild(makeCard(place, i)));
+  }
+
+  function makeCard(place, delay = 0) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.animationDelay = `${delay * 0.06}s`;
+
+  const rating = place.rating ? place.rating.toFixed(1) : '—';
+  const stars = place.rating ? '★'.repeat(Math.round(place.rating)) + '☆'.repeat(5 - Math.round(place.rating)) : '☆☆☆☆☆';
+  const tag = getTypeTag(place.types);
+  const openStatus = getOpenStatus(place);
+  const addr = (place.vicinity || place.formatted_address || '').replace(/'/g, '&#39;');
+  const emoji = getEmoji(place.types);
+
+  // IMAGE FIX: Correctly check and call getUrl()
+  const imgContainer = document.createElement('div');
+  if (place.photos && place.photos.length > 0) {
+    // This generates the actual URL string from the Google Photo Object
+    const photoUrl = place.photos[0].getUrl({ maxWidth: 500, maxHeight: 400 });
+    imgContainer.innerHTML = `<img src="${photoUrl}" class="card-img" alt="${place.name}" onerror="this.parentElement.innerHTML='<div class=\'card-img-placeholder\'>${emoji}</div>'">`;
+  } else {
+    imgContainer.innerHTML = `<div class="card-img-placeholder">${emoji}</div>`;
+  }
+
+  card.appendChild(imgContainer);
+  card.insertAdjacentHTML('beforeend', `
+    <div class="card-body">
+      <span class="card-tag">${tag}</span>
+      <div class="card-name">${escHtml(place.name)}</div>
+      <div class="card-addr">📍 ${addr}</div>
+      <div class="card-footer">
+        <div class="rating"><span class="stars">${stars}</span><span>${rating}</span></div>
+        <span class="open-badge ${openStatus.cls}">${openStatus.label}</span>
+      </div>
+    </div>
+  `);
+
+  card.addEventListener('click', () => openModal(place));
+  return card;
+  }
+
+  function escHtml(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function getEmoji(types) {
+    if (!types) return '🍽️';
+    if (types.includes('cafe')) return '☕';
+    if (types.includes('bar')) return '🍺';
+    return '🍽️';
+  }
+
+  function getTypeTag(types) {
+    if (!types) return 'Restaurant';
+    if (types.includes('cafe')) return 'Café';
+    if (types.includes('bar')) return 'Bar';
+    return 'Restaurant';
+  }
+
+  function getOpenStatus(place) {
+    if (place.opening_hours) {
+      return place.opening_hours.open_now ? { cls: 'open', label: 'Open' } : { cls: 'closed', label: 'Closed' };
+    }
+    return { cls: 'unknown', label: 'Hours vary' };
+  }
+
+  function addMapMarkers(places) {
+    // Only called for card-section results; don't clear map markers (they're managed separately)
+  }
+
+  // Map markers management
+  let mapMarkers = [];
+
+  function clearMapMarkers() {
+    mapMarkers.forEach(m => m.setMap(null));
+    mapMarkers = [];
+  }
+
+  function addMarkersForLocation(location, type) {
+    if (!service) return;
+    clearMapMarkers();
+    const bounds = map.getBounds();
+    const zoom = map.getZoom();
+    // Use larger radius when zoomed out
+    const radius = zoom >= 15 ? 1000 : zoom >= 13 ? 2000 : 4000;
+
+    const types = ['restaurant', 'cafe', 'bar', 'bakery', 'meal_takeaway', 'meal_delivery'];
+    let fetched = 0;
+    const allResults = [];
+
+    types.forEach(t => {
+      const request = {
+        location: new google.maps.LatLng(location.lat, location.lng),
+        radius,
+        type: t,
+      };
+      service.nearbySearch(request, (results, status) => {
+        fetched++;
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          allResults.push(...results);
+        }
+        if (fetched === types.length) {
+          // Deduplicate by place_id
+          const seen = new Set();
+          const unique = allResults.filter(p => {
+            if (!p.place_id || seen.has(p.place_id)) return false;
+            seen.add(p.place_id);
+            return true;
+          });
+          // Filter to visible bounds
+          const visibleBounds = map.getBounds();
+          const inView = visibleBounds
+            ? unique.filter(p => p.geometry && visibleBounds.contains(p.geometry.location))
+            : unique;
+          placeMapMarkers(inView);
+        }
+      });
+    });
+  }
+
+  function placeMapMarkers(places) {
+    // Clear any existing map markers
+    mapMarkers.forEach(m => m.setMap(null));
+    mapMarkers = [];
+
+    places.forEach(place => {
+      if (!place.geometry) return;
+      const emoji = getEmoji(place.types);
+      const openStatus = getOpenStatus(place);
+
+      // Custom emoji label marker
+      const marker = new google.maps.Marker({
+        position: place.geometry.location,
+        map,
+        label: {
+          text: emoji,
+          fontSize: '20px',
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 18,
+          fillColor: openStatus.cls === 'open' ? '#FFFFFF' : openStatus.cls === 'closed' ? '#FFF5F5' : '#FAFAFA',
+          fillOpacity: 0.95,
+          strokeColor: openStatus.cls === 'open' ? '#1A7A45' : openStatus.cls === 'closed' ? '#C0392B' : '#AAAAAA',
+          strokeWeight: 2,
+        },
+        title: place.name,
+        optimized: false,
+      });
+
+      // Mini info window on hover
+      const infoWin = new google.maps.InfoWindow({
+        content: `<div style="font-family:'DM Sans',sans-serif;padding:4px 2px;max-width:180px;">
+          <div style="font-weight:700;font-size:0.85rem;color:#1A1614;">${escHtml(place.name)}</div>
+          <div style="font-size:0.75rem;color:#888;margin-top:2px;">${getTypeTag(place.types)} · <span style="color:${openStatus.cls==='open'?'#1A7A45':'#C0392B'}">${openStatus.label}</span></div>
+          ${place.rating ? `<div style="font-size:0.75rem;color:#F5A623;margin-top:2px;">★ ${place.rating.toFixed(1)}</div>` : ''}
+          <div style="font-size:0.72rem;color:#E8440A;margin-top:4px;font-weight:600;">Click for details →</div>
+        </div>`,
+        disableAutoPan: true,
+      });
+
+      marker.addListener('mouseover', () => {
+        infoWindows.forEach(iw => iw.close());
+        infoWin.open(map, marker);
+      });
+      marker.addListener('mouseout', () => {
+        setTimeout(() => infoWin.close(), 800);
+      });
+      marker.addListener('click', () => {
+        infoWin.close();
+        openModal(place);
+      });
+
+      mapMarkers.push(marker);
+      infoWindows.push(infoWin);
+    });
+  }
+    gems:     { query: 'hidden gem restaurant Brisbane', label: 'Hidden Gem',  strip: 'gems-strip'   },
+    trending: { query: 'trending restaurant Brisbane',   label: 'Trending',    grid: 'trending-grid' },
+    budget:   { query: 'cheap eats Brisbane',            label: 'Budget Pick', grid: 'budget-grid'   },
+  };
+
+  function loadCurated(key) {
+    if (!service) return;
+    const cfg = curatedQueries[key];
+    service.textSearch({ query: cfg.query }, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+        if (cfg.strip) renderCuratedStrip(results.slice(0, 8), cfg.strip, cfg.label);
+        if (cfg.grid)  renderCards(results.slice(0, 6), cfg.grid);
+      }
+    });
+  }
+
+  function renderCuratedStrip(places, stripId, label) {
+    const strip = document.getElementById(stripId);
+    if (!strip) return;
+    strip.innerHTML = '';
+    places.forEach(place => {
+      const card = document.createElement('div');
+      card.className = 'curated-card';
+      const emoji = getEmoji(place.types);
+      if (place.photos && place.photos.length > 0) {
+        const img = document.createElement('img');
+        img.className = 'curated-card-img';
+        img.src = place.photos[0].getUrl({ maxWidth: 400, maxHeight: 600 });
+        card.appendChild(img);
+      } else {
+        card.innerHTML = `<div class="curated-placeholder">${emoji}</div>`;
+      }
+      card.insertAdjacentHTML('beforeend', `<div class="curated-card-overlay"><div class="curated-card-label">${label}</div><div class="curated-card-name">${escHtml(place.name)}</div></div>`);
+      card.addEventListener('click', () => openModal(place));
+      strip.appendChild(card);
+    });
+  }
+
+  function openModal(place) {
+    if (!place.place_id || !service) return;
+    service.getDetails({ placeId: place.place_id }, (details, status) => {
+      showModal(status === google.maps.places.PlacesServiceStatus.OK ? details : place);
+    });
+  }
+
+  function showModal(p) {
+    const overlay = document.getElementById('modal-overlay');
+    const imgWrap = document.getElementById('modal-img-wrap');
+    const emoji = getEmoji(p.types);
+
+    // Image
+    if (p.photos && p.photos.length > 0) {
+      imgWrap.innerHTML = `<img class="modal-img" src="${p.photos[0].getUrl({maxWidth:800,maxHeight:500})}" alt="${escHtml(p.name)}" onerror="this.parentElement.innerHTML='<div class=\\'modal-img-placeholder\\'>${emoji}</div>'">`;
+    } else {
+      imgWrap.innerHTML = `<div class="modal-img-placeholder">${emoji}</div>`;
+    }
+
+    // Name & address
+    document.getElementById('modal-name').textContent = p.name || '';
+    document.getElementById('modal-addr').textContent = p.formatted_address || p.vicinity || '';
+
+    // Meta chips
+    const rating = p.rating ? p.rating.toFixed(1) : null;
+    const ratingCount = p.user_ratings_total ? `(${p.user_ratings_total.toLocaleString()})` : '';
+    const openStatus = getOpenStatus(p);
+    const priceLevel = p.price_level ? '$'.repeat(p.price_level) : null;
+    const tag = getTypeTag(p.types);
+
+    let metaHtml = `<span class="modal-chip">🍽️ ${tag}</span>`;
+    if (rating) metaHtml += `<span class="modal-chip">⭐ ${rating} <span style="color:var(--soft);font-weight:400;font-size:0.78rem;">${ratingCount}</span></span>`;
+    if (priceLevel) metaHtml += `<span class="modal-price-tag">${priceLevel}</span>`;
+    metaHtml += `<span class="modal-chip open-badge ${openStatus.cls}" style="border-radius:100px;">${openStatus.label}</span>`;
+    document.getElementById('modal-meta').innerHTML = metaHtml;
+
+    // Action buttons
+    let actionsHtml = '';
+    if (p.formatted_phone_number) {
+      actionsHtml += `<a class="modal-action-btn primary" href="tel:${p.formatted_phone_number}">📞 Call ${p.formatted_phone_number}</a>`;
+    } else if (p.international_phone_number) {
+      actionsHtml += `<a class="modal-action-btn primary" href="tel:${p.international_phone_number}">📞 Call ${p.international_phone_number}</a>`;
+    }
+    if (p.website) {
+      // Try to detect if it's a menu URL
+      const websiteUrl = p.website;
+      actionsHtml += `<a class="modal-action-btn secondary" href="${websiteUrl}" target="_blank" rel="noopener">🌐 Website</a>`;
+      // Add a "View Menu" button that searches for the menu page
+      const menuSearchUrl = `https://www.google.com/search?q=${encodeURIComponent((p.name || '') + ' menu')}`;
+      actionsHtml += `<a class="modal-action-btn green" href="${menuSearchUrl}" target="_blank" rel="noopener">🍴 View Menu</a>`;
+    } else {
+      const menuSearchUrl = `https://www.google.com/search?q=${encodeURIComponent((p.name || '') + ' Brisbane menu')}`;
+      actionsHtml += `<a class="modal-action-btn green" href="${menuSearchUrl}" target="_blank" rel="noopener">🍴 Find Menu</a>`;
+    }
+
+    // Google Maps directions link
+    const mapsUrl = p.url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ' ' + (p.formatted_address || ''))}`;
+    actionsHtml += `<a class="modal-action-btn secondary" href="${mapsUrl}" target="_blank" rel="noopener">🗺️ Directions</a>`;
+
+    document.getElementById('modal-actions').innerHTML = actionsHtml;
+
+    // Opening hours
+    let hoursHtml = '';
+    if (p.opening_hours && p.opening_hours.weekday_text && p.opening_hours.weekday_text.length > 0) {
+      hoursHtml = `<div class="modal-divider"></div><div class="modal-section-label">Opening Hours</div><div class="modal-hours">`;
+      const today = new Date().getDay(); // 0=Sun
+      const dayMap = [6,0,1,2,3,4,5]; // weekday_text starts Monday
+      p.opening_hours.weekday_text.forEach((line, i) => {
+        const isTodayIdx = dayMap[today] === i;
+        hoursHtml += `<div style="${isTodayIdx ? 'font-weight:600;color:var(--charcoal);' : ''}">${escHtml(line)}</div>`;
+      });
+      hoursHtml += `</div>`;
+    }
+    document.getElementById('modal-hours').innerHTML = hoursHtml;
+
+    // Reviews
+    let reviewsHtml = '';
+    if (p.reviews && p.reviews.length > 0) {
+      reviewsHtml = `<div class="modal-divider"></div><div class="modal-section-label">What People Say</div><div class="modal-reviews">`;
+      p.reviews.slice(0, 3).forEach(r => {
+        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        const text = r.text ? (r.text.length > 180 ? r.text.slice(0,180) + '…' : r.text) : '';
+        reviewsHtml += `<div class="modal-review"><div class="modal-review-author">${escHtml(r.author_name)}</div><div class="modal-review-stars">${stars}</div>${escHtml(text)}</div>`;
+      });
+      reviewsHtml += `</div>`;
+    }
+    document.getElementById('modal-map').innerHTML = reviewsHtml;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(event) {
+    if (event.target.id === 'modal-overlay') {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function mapStyles() { return []; }
+</script>
+
+  <script async 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBE9t6MOwtHrSk8oo7pqBrp_dd8vFIDdvE&libraries=places&callback=initMap&v=weekly">
+  </script>
+</body>
+</html>
